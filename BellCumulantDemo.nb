@@ -1,0 +1,141 @@
+
+Notebook[{
+Cell["BellCumulantDemo.nb: Interactive Cumulant Demonstration", "Title"],
+
+Cell["Load the CumulantTools Package", "Section"],
+Cell[BoxData[
+ RowBox[{"<<", "CumulantTools`"}]
+], "Input"],
+
+Cell["Define the Partition Function and Log Partition Function", "Section"],
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"Z", "[", 
+   RowBox[{"\[Beta]_", ",", "\[Omega]_"}], "]"}], ":=", 
+  RowBox[{"Product", "[", 
+   RowBox[{
+    RowBox[{"1", "/", 
+     RowBox[{"(", 
+      RowBox[{"1", "-", 
+       RowBox[{"Exp", "[", 
+        RowBox[{"-", "\[Beta]", " ", "n", " ", "\[Omega]"}], "]"}]}], 
+      ")"}]}], ",", 
+    RowBox[{"{", 
+     RowBox[{"n", ",", "1", ",", "100"}], "}"}]}], "]"}]}]
+], "Input"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"logZ", "[", 
+   RowBox[{"\[Beta]_", ",", "\[Omega]_"}], "]"}], ":=", 
+  RowBox[{"Log", "[", 
+   RowBox[{"Z", "[", 
+    RowBox[{"\[Beta]", ",", "\[Omega]"}], "]"}], "]"}]}]
+], "Input"],
+
+Cell["Define Moments and Cumulant Functions", "Section"],
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"moments", "[", 
+   RowBox[{"\[Beta]_", ",", "\[Omega]_", ",", "max_"}], "]"}], ":=", 
+  RowBox[{"Table", "[", 
+   RowBox[{
+    RowBox[{"D", "[", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"logZ", "[", 
+        RowBox[{"\[Beta]", ",", "\[Omega]"}], "]"}], "^", "a"}], ",", 
+      RowBox[{"{", 
+       RowBox[{"\[Beta]", ",", "n"}], "}"}]}], "]"}], ",", 
+    RowBox[{"{", 
+     RowBox[{"n", ",", "1", ",", "max"}], "}"}]}], "]"}]}]
+], "Input"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"symbolicCumulants", "[", 
+   RowBox[{"\[Beta]_", ",", "\[Omega]_", ",", "a_", ",", "nmax_"}], "]"}], 
+  ":=", 
+  RowBox[{"AllCumulants", "[", 
+   RowBox[{"nmax", ",", 
+    RowBox[{"moments", "[", 
+     RowBox[{"\[Beta]", ",", "\[Omega]", ",", "nmax"}], "]"}]}], "]"}]}]
+], "Input"],
+
+Cell["Interactive Cumulant Plot", "Section"],
+Cell[BoxData[
+ RowBox[{"Manipulate", "[", 
+  RowBox[{
+   RowBox[{"Module", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"\[Beta]", ",", "m", ",", "c"}], "}"}], ",", 
+     RowBox[{
+      RowBox[{"\[Beta]", "=", 
+       RowBox[{"1", "/", "T"}]}], ";", 
+      RowBox[{"m", "=", 
+       RowBox[{"moments", "[", 
+        RowBox[{"\[Beta]", ",", "\[Omega]", ",", "n"}], "]"}]}], ";", 
+      RowBox[{"c", "=", 
+       RowBox[{"AllCumulants", "[", 
+        RowBox[{"n", ",", "m"}], "]"}]}], ";", 
+      RowBox[{"ListPlot", "[", 
+       RowBox[{"c", ",", 
+        RowBox[{"PlotStyle", "->", "Red"}], ",", 
+        RowBox[{"PlotLabel", "->", 
+         RowBox[{"\"Cumulants up to order \"<>", 
+          RowBox[{"ToString", "[", "n", "]"}]}]}], ",", 
+        RowBox[{"AxesLabel", "->", 
+         RowBox[{"{", 
+          RowBox[{"\"Order\"", ",", "\"Cumulant\""}], "}"}]}]}], 
+       "]"}]}]}], "]"}], ",", 
+   RowBox[{"{{", 
+    RowBox[{"n", ",", "4"}], "},", "1", ",", "8", ",", "1"}], ",", 
+   RowBox[{"{{", 
+    RowBox[{"\[Omega]", ",", "1"}], "},", "0.1", ",", "5"}], ",", 
+   RowBox[{"{{", 
+    RowBox[{"T", ",", "1"}], "},", "0.1", ",", "5"}], ",", 
+   RowBox[{"{{", 
+    RowBox[{"a", ",", "1"}], "},", "1", ",", "5"}]}], "]"}]
+], "Input"],
+
+Cell["Symbolic vs Numerical Comparison Table", "Section"],
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"numericalMoment", "[", 
+   RowBox[{"\[Beta]_", ",", "\[Omega]_", ",", "a_", ",", "k_"}], "]"}], ":=", 
+  RowBox[{
+   RowBox[{"D", "[", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"logZ", "[", 
+       RowBox[{"\[Beta]", ",", "\[Omega]"}], "]"}], "^", "a"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\[Beta]", ",", "k"}], "}"}]}], "]"}], "/.", 
+   RowBox[{"\[Beta]", "->", "\[Beta]"}]}]}]
+], "Input"],
+
+Cell[BoxData[
+ RowBox[{"TableForm", "[", 
+  RowBox[{
+   RowBox[{"Table", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"k", ",", 
+       RowBox[{"symbolicCumulants", "[", 
+        RowBox[{"\[Beta]", ",", "\[Omega]", ",", "a", ",", "k"}], "]"}], 
+       "[", 
+       RowBox[{"[", "k", "]"}], "]"}], ",", 
+       RowBox[{"numericalMoment", "[", 
+        RowBox[{"\[Beta]", ",", "\[Omega]", ",", "a", ",", "k"}], "]"}]}], 
+      "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"k", ",", "1", ",", "6"}], "}"}]}], "]"}], ",", 
+   RowBox[{"TableHeadings", "->", 
+    RowBox[{"{", "None", ",", 
+     RowBox[{"{", 
+      RowBox[{"\"Order\"", ",", "\"Symbolic\"", ",", 
+       "\"Numerical\""}], "}"}], "}"}]}]}], "]"}]
+], "Input"]
+}
+]
